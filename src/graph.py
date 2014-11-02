@@ -11,5 +11,5 @@ class Graph:
 
 	def add_edge(self, start, end, weight):
 		self.edges[start].append(end)
-		self.edges[end].append(start)
+		#self.edges[end].append(start)
 		self.weights[(start, end)] = weight

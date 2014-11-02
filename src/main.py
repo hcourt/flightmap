@@ -2,6 +2,9 @@
 
 import sys, getopt
 from graph import *
+from lightest_path import *
+from at_distance import *
+from heaviest_round_trip import *
 
 def build_map (input):
 	print 'Building map...'
@@ -14,17 +17,46 @@ def build_map (input):
 		if args[2].isdigit():
 			map.add_node(args[0])
 			map.add_node(args[1])
-			map.add_edge(args[0], args[1], args[2])
+			map.add_edge(args[0], args[1], int(args[2]))
 		else:
 			print 'Error: received improper map input.\n'
 			sys.exit(1)
 
 	print 'Build successful.\n'
+	return map
 	
 def do_tasks (input, output, map):
 	print 'Executing tasks...'
 
+	if map is None:
+		print 'Error: map was misread or empty.\n'
+		sys.exit(1)
 
+	for line in input.readlines():
+
+		args = line.rstrip().split(',', 1)
+		ret = ''
+
+		#will perform lightest_path
+		if (len(args) == 2 and args[0] in map.nodes and args[1] in map.nodes):
+			print '\t-finding quickest flight path...'
+			ret = lightest_path(args[0], args[1], map)
+
+		#will perform at_distance
+		elif (len(args) == 2 and args[0] in map.nodes and args[1].isdigit()):
+			print '\t-finding all airports at given distance...'
+			ret = at_distance(args[0], int(args[1]), map)
+
+		#will perform heaviest_round_trip
+		elif (len(args) == 1 and args[0] in map.nodes):
+			print '\t-finding the longest-duration round-trip flight path...'
+			ret = heaviest_round_trip(args[0], map)
+		else:
+			print 'Error: unknown task format: "' + line +'"\n'
+			sys.exit(1)
+
+		output.write(','.join(ret))
+		output.write('\n')
 
 	print 'Execution successful.\n'
 
