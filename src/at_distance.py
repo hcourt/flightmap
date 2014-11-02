@@ -1,3 +1,6 @@
+#breadth-first search of all nodes within num_steps
+#
+
 def at_distance(start, num_steps, map):
 	if num_steps == 1:
 		return map.edges[start]
